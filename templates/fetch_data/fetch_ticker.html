@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binance Ticker Data</title>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            padding: 8px;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+        }
+        th, td {
+            text-align: center;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Fetch Binance Ticker Data</h1>
+
+    <!-- Form to enter symbol and date range -->
+    <form method="GET" action="">
+        <label for="symbol">Symbol:</label>
+        <input type="text" id="symbol" name="symbol" placeholder="e.g., BTCUSDT" value="{{ request.GET.symbol }}" required><br><br>
+
+        <label for="candle">Candle:</label>
+        <input type="text" id="candle" name="candle" placeholder="e.g., 1d" value="{{ request.GET.candle }}"><br><br>
+
+        <label for="start_date">Start Date:</label>
+        <input type="date" id="start_date" name="start_date" value="{{ request.GET.start_date }}" required><br><br>
+
+        <label for="end_date">End Date:</label>
+        <input type="date" id="end_date" name="end_date" value="{{ request.GET.end_date }}" required><br><br>
+
+
+
+        <button type="submit">Fetch Data</button>
+    </form>
+
+    {% if error %}
+        <p style="color: red;">Error: {{ error }}</p>
+    {% endif %}
+
+    {% if data %}
+        <h2>Data for {{ request.GET.symbol }} from {{ request.GET.start_date }} to {{ request.GET.end_date }}</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Open Time</th>
+                    <th>Open</th>
+                    <th>High</th>
+                    <th>Low</th>
+                    <th>Close</th>
+                    <th>Volume</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data %}
+                    <tr>
+                        <td>{{ row.0 }}</td>
+                        <td>{{ row.1 }}</td>
+                        <td>{{ row.2 }}</td>
+                        <td>{{ row.3 }}</td>
+                        <td>{{ row.4 }}</td>
+                        <td>{{ row.5 }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</body>
+</html>

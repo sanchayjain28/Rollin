@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTC Ticker</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const socket = new WebSocket('ws://' + window.location.host + '/ticker');
+            console.log("socket", socket);
+            socket.onopen = function(event) {
+                console.log('WebSocket connection opened');
+                socket.send(JSON.stringify({ message: 'Hello from client' }));
+            };
+
+            socket.onmessage = function(event) {
+                const data = JSON.parse(event.data);
+                const bnbPrice = data.bnb_avg_price || "No price received";
+                
+                document.getElementById('btc-price').innerText = "BNB/USDT Avg Price: " + bnbPrice;
+            };
+
+            socket.onerror = function(error) {
+                console.error('WebSocket Error:', error);
+            };
+
+            socket.onclose = function(event) {
+                console.log('WebSocket connection closed:', event);
+            };
+        });
+</script>
+</head>
+<body>
+    <h1>Live BTC Price Ticker</h1>
+    <p id="btc-price">Waiting for BTC price...</p>
+
+</body>
+</html>
