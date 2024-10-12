@@ -24,4 +24,5 @@ urlpatterns = [
     path("", views.home, name = "home"),
     path("ticker/", include('fetch_data.urls')),
     path("websocket/", include('websocket.urls')),
+    path("strategy/", include('strategy.urls')),
 ]

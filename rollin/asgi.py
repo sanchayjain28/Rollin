@@ -18,7 +18,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "rollin.settings")
 
 
 
-
 ws_patterns = [
     path("ticker/", consumers.BTCTicker.as_asgi())
 ]

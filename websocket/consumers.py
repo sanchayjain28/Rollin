@@ -3,11 +3,14 @@ import json
 import websockets
 import asyncio
 
+from config.logger import logger
+
 class BTCTicker(AsyncWebsocketConsumer):
     async def connect(self):
+        self.symbol = "btcusdt"
         await self.accept()
-        self.scope['session'].set_expiry(3600)
         self.binance_task = asyncio.create_task(self.fetch_bnb_avg_price())
+
 
 
     async def disconnect(self, close_code):
@@ -16,7 +19,7 @@ class BTCTicker(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        message = text_data_json.get('message', '')
+        self.symbol = text_data_json.get('symbol', 'btcusdt').lower()
 
         await self.send(text_data=json.dumps({
             'message': f'You said: hii',
@@ -29,18 +32,19 @@ class BTCTicker(AsyncWebsocketConsumer):
             async with websockets.connect(binance_ws_url) as websocket:
                 subscribe_message = {
                     "method": "SUBSCRIBE",
-                    "params": ["bnbusdt@avgPrice"],
+                    "params": [f"{self.symbol}@avgPrice"],
                     "id": 1
                 }
+                print(subscribe_message)
                 await websocket.send(json.dumps(subscribe_message))
                 while True:
                     binance_data = await websocket.recv()
                     binance_data_json = json.loads(binance_data)
-                    print(binance_data_json)
+                    logger.info(binance_data_json)
                     avg_price = binance_data_json.get('w')
 
                     await self.send(text_data=json.dumps({
-                        'bnb_avg_price': avg_price
+                        'price': avg_price
                     }))
                     await asyncio.sleep(1)
 
