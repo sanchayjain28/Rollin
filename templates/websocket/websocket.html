@@ -33,9 +33,15 @@
 
                 socket.onmessage = function(event) {
                     const data = JSON.parse(event.data);
-                    const price = data.price || "No price received";
-                    const symb = data.symbol || "No price received";
-                    document.getElementById('price-display').innerText = symb + " Price: " + price;
+                    const priceDisplay = document.getElementById('price-display');
+
+                    priceDisplay.innerHTML = ""; 
+
+                    for (const [symbol, price] of Object.entries(data)) {
+                        const priceLine = document.createElement('div'); // Create a new div for each symbol
+                        priceLine.innerText = `${symbol.toUpperCase()} Price: ${price}`; // Format the display text
+                        priceDisplay.appendChild(priceLine); // Append to the display
+                    }
                 };
 
                 socket.onerror = function(error) {
@@ -55,7 +61,7 @@
 
     <!-- Input Form for Symbol -->
     <form id="symbol-form">
-        <label for="symbol-input">Enter Symbol (e.g., BTC, ETH): </label>
+        <label for="symbol-input">Enter Symbol : </label>
         <input type="text" id="symbol-input" placeholder="Enter symbol" required>
         <button type="submit">Get Price</button>
     </form>

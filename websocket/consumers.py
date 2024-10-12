@@ -10,9 +10,9 @@ class BTCTicker(AsyncWebsocketConsumer):
         await self.accept()  
         logger.info("WebSocket connection accepted.")
         self.subscriptions = {}  
+        self.ls = {}
 
     async def disconnect(self, close_code):
-        # Unsubscribe from all symbols when disconnecting
         for symbol in list(self.subscriptions.keys()):
             await self.unsubscribe(symbol)
 
@@ -21,19 +21,19 @@ class BTCTicker(AsyncWebsocketConsumer):
         user_symbol = text_data_json.get('symbol', 'btcusdt').lower()
         symbols = ['btcusdt', 'ethdusdt', 'xrpusdt', 'ltcusdt', 'bnbusdt', 'adausdt', 'dogeusdt']  
         for user_symbol in symbols:
-            if user_symbol not in self.subscriptions:  # Only subscribe if not already subscribed
+            if user_symbol not in self.subscriptions:  
                 await self.subscribe(user_symbol)
 
         await self.send(text_data=json.dumps({
             'message': f'Subscribed to {user_symbol}',
-            'status': 'Subscribed to Binance WebSocket'
+            'status': 'Connected to Binance WebSocket'
         }))
 
     async def subscribe(self, symbol):
         """Subscribe to a new symbol."""
         if symbol in self.subscriptions:
             logger.info(f"Already subscribed to {symbol}")
-            return  # Prevent re-subscribing
+            return 
 
         logger.info(f"Subscribing to {symbol}")
         self.subscriptions[symbol] = asyncio.create_task(self.fetch_symbol_avg_price(symbol))
@@ -42,8 +42,8 @@ class BTCTicker(AsyncWebsocketConsumer):
         """Unsubscribe from a symbol."""
         if symbol in self.subscriptions:
             task = self.subscriptions[symbol]
-            task.cancel()  # Cancel the task
-            del self.subscriptions[symbol]  # Remove it from subscriptions
+            task.cancel() 
+            del self.subscriptions[symbol] 
             logger.info(f"Unsubscribed from {symbol}")
 
     async def fetch_symbol_avg_price(self, symbol):
@@ -57,19 +57,18 @@ class BTCTicker(AsyncWebsocketConsumer):
                 }
                 logger.info(f"Sending subscribe message for {symbol}: {subscribe_message}")
                 await websocket.send(json.dumps(subscribe_message))
-
+                
                 while True:
                     binance_data = await websocket.recv()
                     binance_data_json = json.loads(binance_data)
                     logger.info(f"Received data for {symbol}: {binance_data_json}")
 
-                    avg_price = binance_data_json.get('w')  # Average price key
-                    await self.send(text_data=json.dumps({
-                        'symbol': symbol,
-                        'price': avg_price
-                    }))
-                    
-                    await asyncio.sleep(1)  # Adjust frequency as needed
+                    avg_price = binance_data_json.get('w')  # Get the average price
+                    if avg_price is not None:
+                        self.ls[symbol] = avg_price  # Store the average price
+                        await self.send(text_data=json.dumps(self.ls))  # Send updated prices
+                        print(self.ls)
+                    await asyncio.sleep(10)  # Adjust the frequency as needed
 
         except asyncio.CancelledError:
             logger.info(f"Task for {symbol} was cancelled.")
