@@ -63,12 +63,11 @@ class BTCTicker(AsyncWebsocketConsumer):
                     binance_data_json = json.loads(binance_data)
                     logger.info(f"Received data for {symbol}: {binance_data_json}")
 
-                    avg_price = binance_data_json.get('w')  # Get the average price
+                    avg_price = binance_data_json.get('w') 
                     if avg_price is not None:
-                        self.ls[symbol] = avg_price  # Store the average price
-                        await self.send(text_data=json.dumps(self.ls))  # Send updated prices
-                        print(self.ls)
-                    await asyncio.sleep(10)  # Adjust the frequency as needed
+                        self.ls[symbol] = avg_price  
+                        await self.send(text_data=json.dumps(self.ls)) 
+                    await asyncio.sleep(10) 
 
         except asyncio.CancelledError:
             logger.info(f"Task for {symbol} was cancelled.")
