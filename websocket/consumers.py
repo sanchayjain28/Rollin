@@ -6,7 +6,7 @@ import asyncio
 class BTCTicker(AsyncWebsocketConsumer):
     async def connect(self):
         await self.accept()
-
+        self.scope['session'].set_expiry(3600)
         self.binance_task = asyncio.create_task(self.fetch_bnb_avg_price())
 
 

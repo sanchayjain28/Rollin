@@ -20,10 +20,10 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "rollin.settings")
 
 
 ws_patterns = [
-    path("ticker", consumers.BTCTicker.as_asgi())
+    path("ticker/", consumers.BTCTicker.as_asgi())
 ]
 
 application = ProtocolTypeRouter({
-      "http": get_asgi_application(),
+    "http": get_asgi_application(),
     "websocket": URLRouter(ws_patterns)
 })
