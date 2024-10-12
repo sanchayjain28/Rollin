@@ -34,8 +34,8 @@
                 socket.onmessage = function(event) {
                     const data = JSON.parse(event.data);
                     const price = data.price || "No price received";
-                    
-                    document.getElementById('price-display').innerText = symbol + " Price: " + price;
+                    const symb = data.symbol || "No price received";
+                    document.getElementById('price-display').innerText = symb + " Price: " + price;
                 };
 
                 socket.onerror = function(error) {
