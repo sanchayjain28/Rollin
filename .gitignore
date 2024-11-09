@@ -1,3 +1,5 @@
 *.env*
 *.pyc
 *.bin
+*.log
+*.cpython-311.pyc
