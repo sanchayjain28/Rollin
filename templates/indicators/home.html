@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Indicator</title>
+</head>
+<body>
+    <h1>Select Your Indicator</h1>
+    <form method="POST" action="{% url 'indicators_choose' %}">
+        {% csrf_token %}
+
+        <label for="indicator">Choose an indicator:</label>
+        <select id="indicator" name="indicator" onchange="showParams()">
+            <option value="" selected disabled>Select an indicator</option>
+            <option value="rsi">RSI</option>
+            <option value="adx">ADX</option>
+            <option value="macd">MACD</option>
+        </select>
+
+        <div id="params">
+            <!-- RSI Parameters -->
+            <div id="rsi_params" style="display:none;">
+                <label for="rsi_time">Time Period:</label>
+                <input type="number" id="rsi_time" name="rsi_time" value="14">
+            </div>
+
+            <!-- ADX Parameters -->
+            <div id="adx_params" style="display:none;">
+                <label for="adx_time">Time Period:</label>
+                <input type="number" id="adx_time" name="adx_time" value="14">
+                
+                <label for="adx_smoothing">Smoothing:</label>
+                <input type="number" id="adx_smoothing" name="adx_smoothing" value="3">
+            </div>
+
+            <!-- MACD Parameters -->
+            <div id="macd_params" style="display:none;">
+                <label for="macd_fast">Fast Period:</label>
+                <input type="number" id="macd_fast" name="macd_fast" value="12">
+                
+                <label for="macd_slow">Slow Period:</label>
+                <input type="number" id="macd_slow" name="macd_slow" value="26">
+                
+                <label for="macd_signal">Signal Period:</label>
+                <input type="number" id="macd_signal" name="macd_signal" value="9">
+            </div>
+        </div>
+
+        <button type="submit" id="submitBtn" disabled>Submit</button>
+    </form>
+
+    <script>
+        function showParams() {
+            const indicator = document.getElementById('indicator').value;
+            
+            // Hide all parameter sections initially
+            document.getElementById('rsi_params').style.display = 'none';
+            document.getElementById('adx_params').style.display = 'none';
+            document.getElementById('macd_params').style.display = 'none';
+
+            // Enable or disable the submit button based on selection
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = (indicator === "");
+
+            // Show only the relevant section
+            if (indicator === 'rsi') {
+                document.getElementById('rsi_params').style.display = 'block';
+            } else if (indicator === 'adx') {
+                document.getElementById('adx_params').style.display = 'block';
+            } else if (indicator === 'macd') {
+                document.getElementById('macd_params').style.display = 'block';
+            } 
+        }
+    </script>
+</body>
+</html>
