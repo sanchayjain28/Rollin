@@ -3,3 +3,5 @@
 *.bin
 *.log
 *.cpython-311.pyc
+poetry.lock
+db.sqlite3

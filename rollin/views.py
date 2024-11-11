@@ -26,7 +26,7 @@ def login(request):
     return render(request, 'login.html', {'form': form})
 
 def logout(request):
-    logger.info(f"User {request.user.username} attempting to log out.")  # Log the user out attempt.
+    logger.info(f"User {request.user.username} attempting to log out.")  
     if request.user.is_authenticated:
         logger.info(f"User {request.user.username} logged out successfully.")
         django_logout(request)
