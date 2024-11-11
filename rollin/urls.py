@@ -30,5 +30,5 @@ urlpatterns = [
     path("strategy/", include('strategy.urls')),
     path("login/", views.login, name="login"),
     path("signup/", views.SignupView.as_view(), name="signup"),
-    path("logout/", LogoutView.as_view(), name="logout"),
+    path("logout/", views.logout, name="logout"),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
