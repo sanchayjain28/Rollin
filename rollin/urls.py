@@ -28,7 +28,5 @@ urlpatterns = [
     path("ticker/", include('fetch_data.urls')),
     path("websocket/", include('websocket.urls')),
     path("strategy/", include('strategy.urls')),
-    path("login/", views.login, name="login"),
-    path("signup/", views.SignupView.as_view(), name="signup"),
-    path("logout/", views.logout, name="logout"),
+    path("account/", include('account.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

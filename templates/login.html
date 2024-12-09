@@ -22,4 +22,11 @@
 
     <p>Don't have an account? <a href="{% url 'signup' %}">Sign up here</a></p>
 </div>
+{% if errors %}
+    <div class="errors">
+        {% for error in errors %}
+            <p>{{ error }}</p>
+        {% endfor %}
+    </div>
+{% endif %}
 {% endblock %}
