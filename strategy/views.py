@@ -5,7 +5,7 @@ from config.logger import logger
 from django.contrib.auth.decorators import login_required
 
 
-@login_required(login_url='/login/')
+@login_required(login_url='/logon/')
 def home(request):
     if request.method == 'POST':
         logger.info("POST: %s" % request)

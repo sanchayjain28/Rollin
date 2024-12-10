@@ -29,4 +29,5 @@ urlpatterns = [
     path("websocket/", include('websocket.urls')),
     path("strategy/", include('strategy.urls')),
     path("account/", include('account.urls')),
+    path("blogs/", include('blogs.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
