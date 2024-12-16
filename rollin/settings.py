@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "blogs",
+    "django_browser_reload",
 ]
 
 MIDDLEWARE = [
