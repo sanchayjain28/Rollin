@@ -7,9 +7,19 @@ from rest_framework import status
 from rest_framework.authtoken.models import Token
 # Create your views here.
 
+@api_view(["POST", "GET"])
 def login_view(request):
     if request.method == "POST":
-        obtain_auth_token(request)
+        from django.test.client import RequestFactory
+        factory = RequestFactory()
+        django_request = factory.post(
+            "/api-token-auth/",
+            data=request.data,
+            content_type="application/json"
+        )
+        django_request.user = request.user  
+        response = obtain_auth_token(django_request)
+        return response
     else:
         return render(request, "login.html")
 
@@ -20,7 +30,6 @@ def logout_view(request):
     """
     if request.user.is_authenticated:
         try:
-            # Delete the user's token
             token = Token.objects.get(user=request.user)
             token.delete()
             return Response({"message": "Successfully logged out."}, status=status.HTTP_200_OK)
