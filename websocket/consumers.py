@@ -18,7 +18,7 @@ class BTCTicker(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        user_symbol = text_data_json.get('symbol', 'btcusdt').lower()
+        user_symbols = [text_data_json.get('symbol', 'btcusdt').lower()]
         symbols = ['btcusdt', 'ethdusdt', 'xrpusdt', 'ltcusdt', 'bnbusdt', 'adausdt', 'dogeusdt']  
         for user_symbol in symbols:
             if user_symbol not in self.subscriptions:  
